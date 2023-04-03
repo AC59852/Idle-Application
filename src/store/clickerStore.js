@@ -7,13 +7,15 @@ export const clickerStore = defineStore('clicks', {
     clicks: 600,
     baseClickPower: 1,
     clickPower: 0,
+    baseIdlePower: 0,
+    idlePower: 0,
     allIdleItems: idleItems.data().idleItems,
     allClickerItems: clickerItems.data().clickerItems,
   }),
 
   getters: {
     roundedClicks() {
-      return Math.round(this.clicks * 100) / 100;
+      return Math.round(this.clicks);
     },
   },
 
@@ -46,6 +48,8 @@ export const clickerStore = defineStore('clicks', {
         var newPrice = basePrice * Math.pow(1.4, itemToPurchase.quantity); 
 
         itemToPurchase.cost = Math.round(newPrice * 100) / 100;
+
+        this.idlePower += itemToPurchase.multiplier;
       } else {
         alert('Not enough clicks!')
       }
