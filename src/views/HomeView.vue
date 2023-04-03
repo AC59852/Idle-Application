@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <h1>Total Clicks: {{ store.clicks }}</h1>
+    <h1>Total Clicks: {{ store.roundedClicks }}</h1>
     <button @click="incrementClicks()" class="clickme"></button>
-    <button @click="purchaseClicker()" class="clickers">Clickers {{ clicker.total }} | Cost {{ clicker.cost }}</button>
-    <button v-for="idleItem in idleItems" :key="idleItem" @click="purchaseIdler(idleItem)">{{ idleItem.name }} {{ idleItem.quantity }} | Cost: {{ idleItem.cost }}</button>
+    <button v-for="clickerItem in store.allClickerItems" :key="clickerItem" @click="purchaseClicker(clickerItem)">{{ clickerItem.name }} {{ clickerItem.quantity }} | Cost: {{ clickerItem.cost }}</button>
+    <button v-for="idleItem in store.allIdleItems" :key="idleItem" @click="purchaseIdler(idleItem)">{{ idleItem.name }} {{ idleItem.quantity }} | Cost: {{ idleItem.cost }}</button>
   </div>
 </template>
 
@@ -19,16 +19,6 @@ export default {
   data() {
     return {
       interval: null,
-      clicks: 100,
-      baseClick: 1,
-      calculatedClicks: 0,
-      clicker: {
-        cost: 10,
-        multiplier: 1,
-        total: 0
-      },
-
-      allIdleItems: this.idleItems
     }
   },
 
@@ -41,37 +31,25 @@ export default {
   },
 
   mounted() {
-    // this.interval = setInterval(() => {
-    //   this.clicks += this.idler.multiplier * this.idler.total;
-    // }, 1000);
-
-    this.calculatedClicks = this.baseClick;
+    this.interval = setInterval(() => {
+      console.log('interval')
+      this.store.incrementIdle()
+    }, 100);
 
     console.log(this.idleItems)
   },
 
   methods: {
     incrementClicks() {
-      this.store.incrementClicks(this.calculatedClicks);
+      this.store.incrementClicks();
     },
 
-    purchaseClicker() {
-      if (this.clicks >= this.clicker.cost) {
-        this.clicks -= this.clicker.cost;
-        this.clicker.cost *= 2;
-
-        this.calculatedClicks = this.baseClick += this.clicker.multiplier;
-
-        this.idler.cost *= 1.2;
-
-        this.idler.cost = Math.round(this.idler.cost);
-      }
+    purchaseClicker(clickerItem) {
+      this.store.purchaseClicker(clickerItem);
     },
 
     purchaseIdler(idleItem) {
-      if (this.clicks >= idleItem.cost) {
-        this.purchaseItem(idleItem)
-      }
+      this.store.purchaseItem(idleItem)
     }
   }
 }

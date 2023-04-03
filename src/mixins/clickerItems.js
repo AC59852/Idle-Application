@@ -1,11 +1,11 @@
 export default {
   data() {
     return {
-      idleItems: [
+      clickerItems: [
         {
-          name: 'item1',
-          baseCost: 100,
-          cost: 100,
+          name: 'clicker1',
+          baseCost: 10,
+          cost: 10,
           quantity: 0,
           unlocked: true,
           multiplier: 0.1,
